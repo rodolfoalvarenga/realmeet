@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 @RestController
@@ -32,5 +33,10 @@ public class RoomController implements RoomsApi {
     @Override
     public CompletableFuture<ResponseEntity<RoomDTO>> createRoom(CreateRoomDTO createRoomDTO) {
         return supplyAsync(() -> roomService.createRoom(createRoomDTO), controllersExecutor).thenApply(ResponseEntityUtils::created);
+    }
+
+    @Override
+    public CompletableFuture<ResponseEntity<Void>> deleteRoom(Long id) {
+        return runAsync(() -> roomService.deleteRoom(id), controllersExecutor).thenApply(ResponseEntityUtils::noContent);
     }
 }

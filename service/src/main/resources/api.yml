@@ -9,7 +9,7 @@ servers:
 paths:
   /rooms/{id}:
     get:
-      summary: 'Return a room by ID'
+      summary: 'Returns a room by ID'
       operationId: getRoom
       tags:
         - room
@@ -30,10 +30,25 @@ paths:
                 $ref: '#/components/schemas/RoomDTO'
         404:
           description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseError'
+
+    delete:
+      summary: 'Deletes a room by ID'
+      operationId: deleteRoom
+      tags:
+        - room
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the room
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: 'Deleted successfully'
+        404:
+          description: Not Found
 
   /rooms:
     post:
