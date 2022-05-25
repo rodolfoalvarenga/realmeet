@@ -1,10 +1,14 @@
 package br.com.sw2you.realmeet.validator;
 
 import br.com.sw2you.realmeet.api.model.CreateRoomDTO;
+import br.com.sw2you.realmeet.api.model.UpdateRoomDTO;
 import br.com.sw2you.realmeet.domain.repository.RoomRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 import static br.com.sw2you.realmeet.validator.ValidatorConstants.DUPLICATED;
+import static br.com.sw2you.realmeet.validator.ValidatorConstants.ROOM_ID;
 import static br.com.sw2you.realmeet.validator.ValidatorConstants.ROOM_NAME;
 import static br.com.sw2you.realmeet.validator.ValidatorConstants.ROOM_NAME_MAX_LENGTH;
 import static br.com.sw2you.realmeet.validator.ValidatorConstants.ROOM_SEATS;
@@ -15,6 +19,7 @@ import static br.com.sw2you.realmeet.validator.ValidatorUtils.validateMaxLength;
 import static br.com.sw2you.realmeet.validator.ValidatorUtils.validateMaxValue;
 import static br.com.sw2you.realmeet.validator.ValidatorUtils.validateMinValue;
 import static br.com.sw2you.realmeet.validator.ValidatorUtils.validateRequired;
+import static java.util.Objects.isNull;
 
 @Component
 public class RoomValidator {
@@ -31,7 +36,20 @@ public class RoomValidator {
         if (validateName(createRoomDTO.getName(), validationErrors) &&
                 validateSeats(createRoomDTO.getSeats(), validationErrors))
         {
-            validateNameDuplicated(createRoomDTO.getName(), validationErrors);
+            validateNameDuplicated(null, createRoomDTO.getName(), validationErrors);
+        }
+
+        throwOnError(validationErrors);
+    }
+
+    public void validate(Long roomId, UpdateRoomDTO updateRoomDTO) {
+        var validationErrors = new ValidationErrors();
+
+        if (validateRequired(roomId, ROOM_ID, validationErrors) &&
+                validateName(updateRoomDTO.getName(), validationErrors) &&
+                validateSeats(updateRoomDTO.getSeats(), validationErrors))
+        {
+            validateNameDuplicated(roomId, updateRoomDTO.getName(), validationErrors);
         }
 
         throwOnError(validationErrors);
@@ -50,10 +68,13 @@ public class RoomValidator {
         );
     }
 
-    private void validateNameDuplicated(String name, ValidationErrors validationErrors) {
+    private void validateNameDuplicated(Long roomIdToExclude, String name, ValidationErrors validationErrors) {
         roomRepository
                 .findByNameAndActive(name, true)
-                .ifPresent(__ -> // __ define a variable that will never be used
-                    validationErrors.add(ROOM_NAME, ROOM_NAME + DUPLICATED));
+                .ifPresent(room -> {
+                    if (isNull(roomIdToExclude) || !Objects.equals(room.getId(), roomIdToExclude)) {
+                        validationErrors.add(ROOM_NAME, ROOM_NAME + DUPLICATED);
+                    }
+                });
     }
 }
