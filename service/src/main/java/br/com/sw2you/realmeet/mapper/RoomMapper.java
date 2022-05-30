@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public abstract class RoomMapper {
 
-    public abstract RoomDTO fromEntityToDto(Room room);
+    public abstract RoomDTO fromEntityToDTO(Room room);
 
-    public abstract Room fromCreateRoomDtoToEntity(CreateRoomDTO createRoomDTO);
+    public abstract Room fromCreateRoomDTOToEntity(CreateRoomDTO createRoomDTO);
 }

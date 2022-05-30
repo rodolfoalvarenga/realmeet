@@ -23,7 +23,7 @@ class RoomMapperUnitTest extends BaseUnitTest {
     @Test
     void testFromEntityToDto() {
         var room = newRoomBuilder().id(DEFAULT_ROOM_ID).build();
-        var dto = victim.fromEntityToDto(room);
+        var dto = victim.fromEntityToDTO(room);
 
         assertEquals(room.getId(), dto.getId());
         assertEquals(room.getName(), dto.getName());
@@ -33,7 +33,7 @@ class RoomMapperUnitTest extends BaseUnitTest {
     @Test
     void testCreateRoomDtoToEntity() {
         var createRoomDTO = newCreateRoomDTO();
-        var room = victim.fromCreateRoomDtoToEntity(createRoomDTO);
+        var room = victim.fromCreateRoomDTOToEntity(createRoomDTO);
 
         assertEquals(createRoomDTO.getName(), room.getName());
         assertEquals(createRoomDTO.getSeats(), room.getSeats());

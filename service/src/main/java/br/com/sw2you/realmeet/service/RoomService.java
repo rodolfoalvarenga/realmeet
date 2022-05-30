@@ -29,14 +29,14 @@ public class RoomService {
     public RoomDTO getRoom(Long id) {
         requireNonNull(id);
         Room room = getActiveRoomOrThrow(id);
-        return roomMapper.fromEntityToDto(room);
+        return roomMapper.fromEntityToDTO(room);
     }
 
     public RoomDTO createRoom(CreateRoomDTO createRoomDTO) {
         roomValidator.validate(createRoomDTO);
-        var room = roomMapper.fromCreateRoomDtoToEntity(createRoomDTO);
+        var room = roomMapper.fromCreateRoomDTOToEntity(createRoomDTO);
         roomRepository.save(room);
-        return roomMapper.fromEntityToDto(room);
+        return roomMapper.fromEntityToDTO(room);
     }
 
     @Transactional
