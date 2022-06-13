@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 @RestController
@@ -28,5 +29,11 @@ public class AllocationController implements AllocationsApi {
     public CompletableFuture<ResponseEntity<AllocationDTO>> createAllocation(CreateAllocationDTO createAllocationDTO) {
         return supplyAsync(() -> allocationService.createAllocation(createAllocationDTO), controllersExecutor)
                 .thenApply(ResponseEntityUtils::created);
+    }
+
+    @Override
+    public CompletableFuture<ResponseEntity<Void>> deleteAllocation(Long id) {
+        return runAsync(() -> allocationService.deleteAllocation(id), controllersExecutor)
+                .thenApply(ResponseEntityUtils::noContent);
     }
 }

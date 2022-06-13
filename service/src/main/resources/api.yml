@@ -123,6 +123,28 @@ paths:
         422:
           $ref: '#/components/responses/UnprocessableEntity'
 
+  /allocations/{id}:
+    delete:
+      summary: 'Deletes an allocation by ID'
+      operationId: deleteAllocation
+      tags:
+        - allocation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the allocation
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: 'Deleted successfully'
+        404:
+          description: Not found
+        422:
+          description: '#/components/responses/UnprocessableEntity'
+
 components:
   schemas:
     UpdateRoomDTO:
